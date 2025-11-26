@@ -17,6 +17,7 @@ import type {
 export interface Config {
   codPrestador: string;
   razonSocial: string;
+  nitPrestador: string; // NIT del prestador
   tipoId: TipoIdentificacionValue;
   numId: string;
   numFactura: string;

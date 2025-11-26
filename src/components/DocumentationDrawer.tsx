@@ -161,19 +161,36 @@ export const DocumentationDrawer = ({
 					}
 					key='1'
 				>
+					<Alert
+						title='Campos del Formulario'
+						description='Los siguientes campos se capturan en la sección "Datos de Facturación (AF)" del formulario principal.'
+						type='info'
+						showIcon
+						style={{ marginBottom: 16 }}
+					/>
+
 					<Space
 						direction='vertical'
 						size='middle'
 						style={{ width: '100%' }}
 					>
 						<div>
-							<Text strong>Código del Prestador</Text>
+							<Text strong>Código del Prestador (REPS)</Text>
 							<Paragraph
 								type='secondary'
 								style={{ marginBottom: 8, marginTop: 4 }}
 							>
 								Código único asignado al prestador de servicios de
-								salud por el Ministerio de Salud. Ejemplo: 1100220011
+								salud por el Ministerio de Salud en el Registro
+								Especial de Prestadores de Servicios de Salud (REPS).
+								Este código identifica su institución en el sistema de
+								salud.
+								<br />
+								Ejemplo: 110011081401
+								<br />
+								<Text type='warning'>
+									⚠️ Este NO es el mismo número que el NIT tributario.
+								</Text>
 							</Paragraph>
 						</div>
 
@@ -184,18 +201,27 @@ export const DocumentationDrawer = ({
 								style={{ marginBottom: 8, marginTop: 4 }}
 							>
 								Nombre legal completo de la institución prestadora de
-								servicios de salud. Ejemplo: IPS Salud Total S.A.S.
+								servicios de salud tal como está registrado en el RUT.
+								Ejemplo: Janneth Granados o IPS Salud Total S.A.S.
 							</Paragraph>
 						</div>
 
 						<div>
-							<Text strong>Tipo de Identificación del Prestador</Text>
+							<Text strong>NIT del Prestador</Text>
 							<Paragraph
 								type='secondary'
 								style={{ marginBottom: 8, marginTop: 4 }}
 							>
-								Tipo de documento del prestador. Para instituciones
-								debe ser <Tag>NI (NIT)</Tag>
+								Número de Identificación Tributaria (NIT) asignado por
+								la DIAN. Ingrese solo los números sin el dígito de
+								verificación ni guiones.
+								<br />
+								Ejemplo: Si su NIT es 900123456-7, ingrese: 900123456
+								<br />
+								<Text type='success'>
+									✓ El sistema automáticamente marca este campo como
+									tipo "NI" (NIT) en el archivo generado.
+								</Text>
 							</Paragraph>
 						</div>
 
@@ -206,7 +232,10 @@ export const DocumentationDrawer = ({
 								style={{ marginBottom: 8, marginTop: 4 }}
 							>
 								Número único de la factura que identifica este
-								conjunto de servicios. Ejemplo: FAC-2025-001
+								conjunto de servicios. Solo ingrese el número (ej:
+								81), el sistema automáticamente lo formateará a 6
+								dígitos rellenando con ceros a la izquierda (000081)
+								para los nombres de los archivos RIPS según la norma.
 							</Paragraph>
 						</div>
 
@@ -217,29 +246,45 @@ export const DocumentationDrawer = ({
 								style={{ marginBottom: 8, marginTop: 4 }}
 							>
 								Fecha en la que se envía la factura a la entidad
-								pagadora. Normalmente es la fecha actual.
+								pagadora. Por defecto muestra la fecha actual pero
+								puede modificarse según la necesidad. Esta fecha debe
+								ser igual o posterior a todas las fechas de consulta.
 							</Paragraph>
 						</div>
+					</Space>
 
+					<Divider style={{ margin: '16px 0' }} />
+
+					<Alert
+						title='Datos de la Entidad Pagadora'
+						description='Estos campos se capturan en la sección "Datos del Paciente (US)" del formulario, ya que corresponden a la EPS o entidad del paciente. El sistema los utiliza automáticamente al generar el archivo AF (Facturas).'
+						type='success'
+						showIcon
+						style={{ marginBottom: 16 }}
+					/>
+
+					<Space
+						direction='vertical'
+						size='middle'
+						style={{ width: '100%' }}
+					>
 						<div>
-							<Text strong>Código de la Entidad</Text>
+							<Text strong>
+								EPS / Entidad (capturado en Datos del Paciente)
+							</Text>
 							<Paragraph
 								type='secondary'
 								style={{ marginBottom: 8, marginTop: 4 }}
 							>
-								Código de la EPS o entidad pagadora asignado por el
-								Ministerio de Salud. Ejemplo: EPS001
-							</Paragraph>
-						</div>
-
-						<div>
-							<Text strong>Nombre de la Entidad</Text>
-							<Paragraph
-								type='secondary'
-								style={{ marginBottom: 8, marginTop: 4 }}
-							>
-								Nombre completo de la EPS o entidad que pagará los
-								servicios. Ejemplo: Salud Total EPS
+								Código y nombre de la EPS o entidad pagadora asignado
+								por el Ministerio de Salud. Se selecciona de la lista
+								precargada en la sección de Datos del Paciente.
+								Ejemplo: EPS037 - Nueva EPS
+								<br />
+								<Text type='success'>
+									✓ Este campo se usa automáticamente en el archivo AF
+									para identificar la entidad responsable del pago.
+								</Text>
 							</Paragraph>
 						</div>
 					</Space>

@@ -229,16 +229,15 @@ export const RipsForm = () => {
 				const config: Config = {
 					codPrestador: valuesFacturacion.codPrestador,
 					razonSocial: valuesFacturacion.razonSocial,
+					nitPrestador: valuesFacturacion.nitPrestador,
 					numFactura: valuesFacturacion.numFactura,
 					fechaRemision:
 						valuesFacturacion.fechaRemision.format('YYYY-MM-DD'),
 					codEntidad: codEntidadSeleccionada,
 					nombreEntidad: entidadSeleccionada?.label ?? 'NUEVA EPS',
 					tipoId: 'NI' as const,
-					numId: valuesFacturacion.codPrestador.substring(0, 10),
-				};
-
-				// 2. Usuario
+					numId: valuesFacturacion.nitPrestador,
+				}; // 2. Usuario
 				const usuario: Usuario = {
 					tipoId: paciente.tipoIdUsuario,
 					numId: paciente.numIdUsuario,
@@ -381,21 +380,22 @@ export const RipsForm = () => {
 							initialValues={{
 								codPrestador: '110011081401',
 								razonSocial: 'Janneth Granados',
+								nitPrestador: '',
 								numFactura: '',
 								fechaRemision: dayjs(),
 							}}
 						>
 							<Row gutter={8}>
-								<Col span={6}>
+								<Col span={5}>
 									<Form.Item
 										label='Código Prestador'
 										name='codPrestador'
 										rules={[{ required: true, message: 'Requerido' }]}
 									>
-										<Input />
+										<Input placeholder='REPS' />
 									</Form.Item>
 								</Col>
-								<Col span={9}>
+								<Col span={8}>
 									<Form.Item
 										label='Razón Social'
 										name='razonSocial'
@@ -404,16 +404,25 @@ export const RipsForm = () => {
 										<Input />
 									</Form.Item>
 								</Col>
-								<Col span={5}>
+								<Col span={4}>
+									<Form.Item
+										label='NIT Prestador'
+										name='nitPrestador'
+										rules={[{ required: true, message: 'Requerido' }]}
+									>
+										<Input placeholder='Sin guión' />
+									</Form.Item>
+								</Col>
+								<Col span={4}>
 									<Form.Item
 										label='N° Factura'
 										name='numFactura'
 										rules={[{ required: true, message: 'Requerido' }]}
 									>
-										<Input prefix="FVE" />
+										<Input prefix='FVE' />
 									</Form.Item>
 								</Col>
-								<Col span={4}>
+								<Col span={3}>
 									<Form.Item
 										label='Fecha Remisión'
 										name='fechaRemision'
@@ -852,11 +861,10 @@ export const RipsForm = () => {
 									</Form.Item>
 								</Col>
 								<Col span={8}>
-									<Form.Item label='Valor Neto' name='valorNeto'>
+									<Form.Item label='Copago' name='copago'>
 										<InputNumber
 											min={0}
 											style={{ width: '100%' }}
-											disabled
 											formatter={(value) =>
 												`$ ${value}`.replace(
 													/\B(?=(\d{3})+(?!\d))/g,
@@ -872,7 +880,7 @@ export const RipsForm = () => {
 									</Form.Item>
 								</Col>
 							</Row>
-							{/* 
+
 							<Row gutter={8}>
 								<Col span={8}>
 									<Form.Item label='Comisión' name='comision'>
@@ -912,13 +920,12 @@ export const RipsForm = () => {
 										/>
 									</Form.Item>
 								</Col>
-								<Col
-									span={8}
-								>
-									<Form.Item label='Copago' name='copago'>
+								<Col span={8}>
+									<Form.Item label='Valor Neto' name='valorNeto'>
 										<InputNumber
 											min={0}
 											style={{ width: '100%' }}
+											disabled
 											formatter={(value) =>
 												`$ ${value}`.replace(
 													/\B(?=(\d{3})+(?!\d))/g,
@@ -933,7 +940,7 @@ export const RipsForm = () => {
 										/>
 									</Form.Item>
 								</Col>
-							</Row> */}
+							</Row>
 						</Form>
 						<Divider />
 						<Table

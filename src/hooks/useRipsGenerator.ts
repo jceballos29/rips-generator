@@ -88,7 +88,7 @@ export const useRipsGenerator = () => {
       config.codPrestador,              // 1. Código prestador
       config.razonSocial,               // 2. Razón social
       'NI',                             // 3. Tipo ID prestador (NI = NIT)
-      config.codPrestador.substring(0, 10), // 4. Número ID prestador
+      config.nitPrestador,              // 4. NIT del prestador
       config.numFactura,                // 5. Número de factura
       fmtDate(config.fechaRemision),    // 6. Fecha de expedición
       fmtDate(fechaInicio),             // 7. Fecha inicio (calculada)
