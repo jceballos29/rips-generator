@@ -380,7 +380,7 @@ export const RipsForm = () => {
 							initialValues={{
 								codPrestador: '110011081401',
 								razonSocial: 'Janneth Granados',
-								nitPrestador: '',
+								nitPrestador: '51612848',
 								numFactura: '',
 								fechaRemision: dayjs(),
 							}}
