@@ -10,12 +10,16 @@ export const useRipsGenerator = () => {
   // Función auxiliar para formatear fechas a dd/mm/yyyy
   const fmtDate = (date: Date | string) => format(new Date(date), 'dd/MM/yyyy');
 
+  // Función auxiliar para formatear número de factura con ceros a la izquierda (6 dígitos)
+  const formatNumFactura = (numFactura: string) => numFactura.padStart(6, '0');
+
   const generateRIPS = useCallback(async (
     config: Config,
     usuarios: Usuario[],
     consultas: Consulta[]
   ) => {
     const zip = new JSZip();
+    const numFacturaFormatted = formatNumFactura(config.numFactura);
 
     // ------------------------------------------
     // 1. GENERAR AC (Consultas)
@@ -48,7 +52,7 @@ export const useRipsGenerator = () => {
     });
 
     const acContent = acLines.join('\r\n'); // Salto de línea Windows
-    const acFileName = `AC${config.numFactura.slice(-6)}.txt`;
+    const acFileName = `AC${numFacturaFormatted}.txt`;
     zip.file(acFileName, acContent);
 
     // ------------------------------------------
@@ -63,7 +67,7 @@ export const useRipsGenerator = () => {
       ].join(',');
     });
 
-    const usFileName = `US${config.numFactura.slice(-6)}.txt`;
+    const usFileName = `US${numFacturaFormatted}.txt`;
     zip.file(usFileName, usLines.join('\r\n'));
 
     // ------------------------------------------
@@ -98,7 +102,7 @@ export const useRipsGenerator = () => {
       Math.round(totalNeto)             // 17. Valor neto a pagar
     ].join(',');
 
-    const afFileName = `AF${config.numFactura.slice(-6)}.txt`;
+    const afFileName = `AF${numFacturaFormatted}.txt`;
     zip.file(afFileName, afLine);
 
     // ------------------------------------------
@@ -110,14 +114,14 @@ export const useRipsGenerator = () => {
       `${config.codPrestador},${fmtDate(config.fechaRemision)},${acFileName},${consultas.length}`
     ];
 
-    const ctFileName = `CT${config.numFactura.slice(-6)}.txt`;
+    const ctFileName = `CT${numFacturaFormatted}.txt`;
     zip.file(ctFileName, ctLines.join('\r\n'));
 
     // ------------------------------------------
     // DESCARGAR ZIP
     // ------------------------------------------
     const content = await zip.generateAsync({ type: "blob" });
-    saveAs(content, `RIPS_${config.numFactura}.zip`);
+    saveAs(content, `RIPS.zip`);
 
   }, []);
 

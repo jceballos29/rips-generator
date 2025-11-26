@@ -381,7 +381,7 @@ export const RipsForm = () => {
 							initialValues={{
 								codPrestador: '110011081401',
 								razonSocial: 'Janneth Granados',
-								numFactura: 'FVE',
+								numFactura: '',
 								fechaRemision: dayjs(),
 							}}
 						>
@@ -410,7 +410,7 @@ export const RipsForm = () => {
 										name='numFactura'
 										rules={[{ required: true, message: 'Requerido' }]}
 									>
-										<Input />
+										<Input prefix="FVE" />
 									</Form.Item>
 								</Col>
 								<Col span={4}>
