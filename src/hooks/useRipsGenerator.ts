@@ -108,10 +108,15 @@ export const useRipsGenerator = () => {
     // ------------------------------------------
     // 4. GENERAR CT (Control)
     // ------------------------------------------
+    // Los nombres de archivo en CT deben ir SIN la extensión .txt
+    const afFileNameNoExt = afFileName.replace('.txt', '');
+    const usFileNameNoExt = usFileName.replace('.txt', '');
+    const acFileNameNoExt = acFileName.replace('.txt', '');
+
     const ctLines = [
-      `${config.codPrestador},${fmtDate(config.fechaRemision)},${afFileName},1`,
-      `${config.codPrestador},${fmtDate(config.fechaRemision)},${usFileName},${usuarios.length}`,
-      `${config.codPrestador},${fmtDate(config.fechaRemision)},${acFileName},${consultas.length}`
+      `${config.codPrestador},${fmtDate(config.fechaRemision)},${afFileNameNoExt},1`,
+      `${config.codPrestador},${fmtDate(config.fechaRemision)},${usFileNameNoExt},${usuarios.length}`,
+      `${config.codPrestador},${fmtDate(config.fechaRemision)},${acFileNameNoExt},${consultas.length}`
     ];
 
     const ctFileName = `CT${numFacturaFormatted}.txt`;
