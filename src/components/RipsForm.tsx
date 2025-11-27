@@ -14,6 +14,7 @@ import {
 	message,
 	Divider,
 	Tag,
+	Statistic,
 } from 'antd';
 import {
 	PlusOutlined,
@@ -109,6 +110,19 @@ export const RipsForm = () => {
 		null,
 	);
 	const [consultas, setConsultas] = useState<ConsultaGuardada[]>([]);
+	const [totles, setTotles] = useState<{
+		valorConsulta: number;
+		cuotaModeradora: number;
+		copago: number;
+		comision: number;
+		descuento: number;
+	}>({
+		valorConsulta: 0,
+		cuotaModeradora: 0,
+		copago: 0,
+		comision: 0,
+		descuento: 0,
+	});
 
 	// Observar cambios en los campos para calcular Valor Neto automáticamente
 	const valorConsulta =
@@ -188,6 +202,13 @@ export const RipsForm = () => {
 				};
 
 				setConsultas([...consultas, nuevaConsulta]);
+				setTotles({
+					valorConsulta: (totles?.valorConsulta || 0) + values.valorConsulta,
+					cuotaModeradora: (totles?.cuotaModeradora || 0) + values.cuotaModeradora,
+					copago: (totles?.copago || 0) + values.copago,
+					comision: (totles?.comision || 0) + values.comision,
+					descuento: (totles?.descuento || 0) + values.descuento,
+				});
 				formConsulta.resetFields();
 				message.success('Consulta agregada correctamente');
 			})
@@ -200,7 +221,17 @@ export const RipsForm = () => {
 
 	// Eliminar consulta de la lista
 	const handleEliminarConsulta = (id: string) => {
+		const consultaAEliminar = consultas.find((c) => c.id === id);
+		if (!consultaAEliminar) return;
+		
 		setConsultas(consultas.filter((c) => c.id !== id));
+		setTotles({
+			valorConsulta: (totles?.valorConsulta || 0) - (consultaAEliminar.valorConsulta || 0),
+			cuotaModeradora: (totles?.cuotaModeradora || 0) - (consultaAEliminar.cuotaModeradora || 0),
+			copago: (totles?.copago || 0) - (consultaAEliminar.copago || 0),
+			comision: (totles?.comision || 0) - (consultaAEliminar.comision || 0),
+			descuento: (totles?.descuento || 0) - (consultaAEliminar.descuento || 0),
+		});
 		message.info('Consulta eliminada');
 	};
 
@@ -293,30 +324,66 @@ export const RipsForm = () => {
 			title: 'Fecha',
 			dataIndex: 'fechaConsulta',
 			key: 'fechaConsulta',
-			width: 110,
+			width: 50,
 			render: (fecha: Date) => dayjs(fecha).format('DD/MM/YYYY'),
 		},
 		{
 			title: 'CUPS',
 			dataIndex: 'codConsulta',
 			key: 'codConsulta',
-			width: 100,
+			width: 50,
 		},
 		{
-			title: 'Diagnóstico Principal',
+			title: 'N° Autorización',
+			dataIndex: 'numAutorizacion',
+			key: 'numAutorizacion',
+			width: 50,
+		},
+		{
+			title: 'Finalidad',
+			dataIndex: 'finalidad',
+			key: 'finalidad',
+			width: 50,
+		},
+		{
+			title: 'Causa Externa',
+			dataIndex: 'causaExterna',
+			key: 'causaExterna',
+			width: 70,
+		},
+		{
+			title: 'Diag. Principal',
 			dataIndex: 'codDiagPrincipal',
 			key: 'codDiagPrincipal',
-			width: 120,
-			render: (cod: string) => {
-				const diag = diagnosticos.find((d) => d.value === cod);
-				return diag ? `${cod} - ${diag.label}` : cod;
-			},
+			width: 50,
 		},
 		{
-			title: 'Valor Neto',
+			title: 'Tipo Diag.',
+			dataIndex: 'tipoDiagPrincipal',
+			key: 'tipoDiagPrincipal',
+			width: 50,
+		},
+		{
+			title: 'Neto',
 			dataIndex: 'valorNeto',
 			key: 'valorNeto',
-			width: 100,
+			width: 50,
+			align: 'right' as const,
+			render: (val: number) => `$${val.toLocaleString()}`,
+		},
+		{
+			title: 'Consulta',
+			dataIndex: 'valorConsulta',
+			key: 'valorConsulta',
+			width: 50,
+			align: 'right' as const,
+			render: (val: number) => `$${val.toLocaleString()}`,
+		},
+		{
+			title: 'Moderadora',
+			dataIndex: 'cuotaModeradora',
+			key: 'cuotaModeradora',
+			width: 50,
 			align: 'right' as const,
 			render: (val: number) => `$${val.toLocaleString()}`,
 		},
@@ -324,30 +391,14 @@ export const RipsForm = () => {
 			title: 'Copago',
 			dataIndex: 'copago',
 			key: 'copago',
-			width: 90,
+			width: 50,
 			align: 'right' as const,
 			render: (val: number) => `$${val.toLocaleString()}`,
 		},
 		{
-			title: 'Comisión',
-			dataIndex: 'comision',
-			key: 'comision',
-			width: 90,
-			align: 'right' as const,
-			render: (val: number) => `$${val.toLocaleString()}`,
-		},
-		{
-			title: 'Descuento',
-			dataIndex: 'descuento',
-			key: 'descuento',
-			width: 90,
-			align: 'right' as const,
-			render: (val: number) => `$${val.toLocaleString()}`,
-		},
-		{
-			title: 'Acciones',
+			title: '',
 			key: 'acciones',
-			width: 80,
+			width: 24,
 			fixed: 'right' as const,
 			render: (_: unknown, record: ConsultaGuardada) => (
 				<Button
@@ -463,7 +514,7 @@ export const RipsForm = () => {
 								unidadMedida: '1',
 								zona: 'U',
 								codDepto: '11',
-								codMuni: '11001',
+								codMuni: '001',
 								edad: 0,
 							}}
 						>
@@ -475,13 +526,13 @@ export const RipsForm = () => {
 										rules={[{ required: true }]}
 									>
 										<Select
-											showSearch
-											filterOption={(input, option) =>
-												(
-													option?.label?.toString().toLowerCase() ??
-													''
-												).includes(input.toLowerCase())
-											}
+											showSearch={{
+												filterOption: (input, option) =>
+													(
+														option?.label?.toString().toLowerCase() ??
+														''
+													).includes(input.toLowerCase()),
+											}}
 											options={tiposIdentificacion.map((t) => ({
 												value: t.value,
 												label: `${t.value} - ${t.label}`,
@@ -571,13 +622,13 @@ export const RipsForm = () => {
 										rules={[{ required: true }]}
 									>
 										<Select
-											showSearch
-											filterOption={(input, option) =>
-												(
-													option?.label?.toString().toLowerCase() ??
-													''
-												).includes(input.toLowerCase())
-											}
+											showSearch={{
+												filterOption: (input, option) =>
+													(
+														option?.label?.toString().toLowerCase() ??
+														''
+													).includes(input.toLowerCase()),
+											}}
 											virtual
 											options={entidades.map((e) => ({
 												value: e.value,
@@ -601,13 +652,13 @@ export const RipsForm = () => {
 								<Col span={8}>
 									<Form.Item label='Departamento' name='codDepto'>
 										<Select
-											showSearch
-											filterOption={(input, option) =>
-												(
-													option?.label?.toString().toLowerCase() ??
-													''
-												).includes(input.toLowerCase())
-											}
+											showSearch={{
+												filterOption: (input, option) =>
+													(
+														option?.label?.toString().toLowerCase() ??
+														''
+													).includes(input.toLowerCase()),
+											}}
 											virtual
 											options={departamentos.map((d) => ({
 												value: d.value,
@@ -625,13 +676,13 @@ export const RipsForm = () => {
 								<Col span={8}>
 									<Form.Item label='Municipio' name='codMuni'>
 										<Select
-											showSearch
-											filterOption={(input, option) =>
-												(
-													option?.label?.toString().toLowerCase() ??
-													''
-												).includes(input.toLowerCase())
-											}
+											showSearch={{
+												filterOption: (input, option) =>
+													(
+														option?.label?.toString().toLowerCase() ??
+														''
+													).includes(input.toLowerCase()),
+											}}
 											virtual
 											disabled={!departamentoSeleccionado}
 											options={municipiosFiltrados.map((m) => ({
@@ -728,13 +779,13 @@ export const RipsForm = () => {
 								<Col span={5}>
 									<Form.Item label='Finalidad' name='finalidad'>
 										<Select
-											showSearch
-											filterOption={(input, option) =>
-												(
-													option?.label?.toString().toLowerCase() ??
-													''
-												).includes(input.toLowerCase())
-											}
+											showSearch={{
+												filterOption: (input, option) =>
+													(
+														option?.label?.toString().toLowerCase() ??
+														''
+													).includes(input.toLowerCase()),
+											}}
 											options={finalidadesConsulta.map((f) => ({
 												value: f.value,
 												label: `${f.value} - ${f.label}`,
@@ -748,13 +799,13 @@ export const RipsForm = () => {
 										name='causaExterna'
 									>
 										<Select
-											showSearch
-											filterOption={(input, option) =>
-												(
-													option?.label?.toString().toLowerCase() ??
-													''
-												).includes(input.toLowerCase())
-											}
+											showSearch={{
+												filterOption: (input, option) =>
+													(
+														option?.label?.toString().toLowerCase() ??
+														''
+													).includes(input.toLowerCase()),
+											}}
 											options={causasExternas.map((c) => ({
 												value: c.value,
 												label: `${c.value} - ${c.label}`,
@@ -792,25 +843,26 @@ export const RipsForm = () => {
 										rules={[{ required: true, message: 'Requerido' }]}
 									>
 										<Select
-											showSearch
-											virtual
-											filterOption={(input, option) => {
-												const label =
-													option?.label?.toString().toLowerCase() ||
-													'';
-												const value =
-													option?.value?.toString().toLowerCase() ||
-													'';
-												const search = input.toLowerCase();
-												return (
-													label.includes(search) ||
-													value.includes(search)
-												);
+											showSearch={{
+												filterOption: (input, option) => {
+													const label =
+														option?.label?.toString().toLowerCase() ||
+														'';
+													const value =
+														option?.value?.toString().toLowerCase() ||
+														'';
+													const search = input.toLowerCase();
+													return (
+														label.includes(search) ||
+														value.includes(search)
+													);
+												},
 											}}
 											options={diagnosticos.map((d) => ({
 												value: d.value,
 												label: `${d.value} - ${d.label}`,
 											}))}
+											virtual
 										/>
 									</Form.Item>
 								</Col>
@@ -955,6 +1007,105 @@ export const RipsForm = () => {
 									'No hay consultas agregadas. Complete el formulario y presione "Agregar Consulta"',
 							}}
 						/>
+						<Divider />
+						<Row gutter={8}>
+							<Col span={4}>
+								<Card>
+									<Statistic
+										title='Consultas'
+										value={totles.valorConsulta}
+										precision={2}
+										styles={{
+											content: {
+												color: '#3f8600',
+												textAlign: 'right',
+											},
+										}}
+										prefix='$'
+									/>
+								</Card>
+							</Col>
+							<Col span={4}>
+								<Card>
+									<Statistic
+										title='Cuota Moderadora'
+										value={totles.cuotaModeradora}
+										precision={2}
+										styles={{
+											content: {
+												color: '#3f8600',
+												textAlign: 'right',
+											},
+										}}
+										prefix='$'
+									/>
+								</Card>
+							</Col>
+							<Col span={4}>
+								<Card>
+									<Statistic
+										title='Copago'
+										value={totles.copago}
+										precision={2}
+										styles={{
+											content: {
+												color: '#3f8600',
+												textAlign: 'right',
+											},
+										}}
+										prefix='$'
+									/>
+								</Card>
+							</Col>
+							<Col span={4}>
+								<Card>
+									<Statistic
+										title='Comisión'
+										value={totles.comision}
+										precision={2}
+										styles={{
+											content: {
+												color: '#3f8600',
+												textAlign: 'right',
+											},
+										}}
+										prefix='$'
+									/>
+								</Card>
+							</Col>
+							<Col span={4}>
+								<Card>
+									<Statistic
+										title='Descuento'
+										value={totles.descuento}
+										precision={2}
+										styles={{
+											content: {
+												color: '#3f8600',
+												textAlign: 'right',
+											},
+										}}
+										prefix='$'
+									/>
+								</Card>
+							</Col>
+							<Col span={4}>
+								<Card>
+									<Statistic
+										title='Neto'
+										value={totles.valorConsulta - (totles.cuotaModeradora + totles.copago)}
+										precision={2}
+										styles={{
+											content: {
+												color: '#3f8600',
+												textAlign: 'right',
+											},
+										}}
+										prefix='$'
+									/>
+								</Card>
+							</Col>
+						</Row>
 					</Card>
 				</Col>
 				<Col span={24}>
@@ -1049,8 +1200,6 @@ export const RipsForm = () => {
 					</Button>
 				</Col>
 			</Row>
-
-			{/* BOTÓN GENERAR RIPS (FLOTANTE) */}
 		</div>
 	);
 };

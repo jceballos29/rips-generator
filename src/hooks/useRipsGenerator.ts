@@ -27,7 +27,7 @@ export const useRipsGenerator = () => {
     const acLines = consultas.map(c => {
       // Array con el orden EXACTO de las columnas según Resolución 3374/2000
       const columns = [
-        c.numFactura,                    // 1. Número de factura
+        `FVE${config.numFactura}`,       // 1. Número de factura
         c.codPrestador,                  // 2. Código prestador
         c.tipoIdUsuario,                 // 3. Tipo ID usuario
         c.numIdUsuario,                  // 4. Número ID usuario
@@ -44,9 +44,6 @@ export const useRipsGenerator = () => {
         Math.round(c.valorConsulta),     // 15. Valor consulta
         Math.round(c.cuotaModeradora),   // 16. Cuota moderadora
         Math.round(c.valorNeto),         // 17. Valor neto
-        Math.round(c.copago),            // 18. Valor copago
-        Math.round(c.comision),          // 19. Valor comisión
-        Math.round(c.descuento)          // 20. Valor descuento
       ];
       return columns.join(',');
     });
@@ -60,10 +57,20 @@ export const useRipsGenerator = () => {
     // ------------------------------------------
     const usLines = usuarios.map(u => {
       return [
-        u.tipoId, u.numId, u.codEntidad, u.tipoUsuario,
-        u.apellido1, u.apellido2, u.nombre1, u.nombre2,
-        u.edad, u.unidadMedida, u.sexo,
-        u.codDepto, u.codMuni, u.zona
+        u.tipoId,           //1. Tipo ID usuario
+        u.numId,          //2. Número ID usuario 
+        u.codEntidad,     //3. Código entidad
+        u.tipoUsuario,    //4. Tipo usuario
+        u.apellido1,      //5. Primer apellido
+        u.apellido2,      //6. Segundo apellido
+        u.nombre1,        //7. Primer nombre
+        u.nombre2,        //8. Segundo nombre
+        u.edad,           //9. Edad
+        u.unidadMedida,   //10. Unidad de medida
+        u.sexo,           //11. Sexo
+        u.codDepto,       //12. Código departamento
+        u.codMuni,        //13. Código municipio
+        u.zona            //14. Zona
       ].join(',');
     });
 
@@ -89,7 +96,7 @@ export const useRipsGenerator = () => {
       config.razonSocial,               // 2. Razón social
       'NI',                             // 3. Tipo ID prestador (NI = NIT)
       config.nitPrestador,              // 4. NIT del prestador
-      config.numFactura,                // 5. Número de factura
+      `FVE${config.numFactura}`,        // 5. Número de factura
       fmtDate(config.fechaRemision),    // 6. Fecha de expedición
       fmtDate(fechaInicio),             // 7. Fecha inicio (calculada)
       fmtDate(fechaFin),                // 8. Fecha fin (calculada)

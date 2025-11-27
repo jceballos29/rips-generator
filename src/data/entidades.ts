@@ -1,6 +1,6 @@
 export const entidades = [
-  { id: 'f9d270d6-e1e8-48d3-bbcd-ffd4ccd78943', value: 'EMP017', label: 'COLMÉDICA MEDICINA PREPAGADA' },
-  { id: '793bf17e-cc9b-4910-a882-5db3087f9665', value: '37086', label: 'COMPAÑÍA DE SEGUROS BOLÍVAR S.A.' },
+  { id: 'f9d270d6-e1e8-48d3-bbcd-ffd4ccd78943', value: 'EMP017', label: 'COLMEDICA MEDICINA PREPAGADA' },
+  { id: '793bf17e-cc9b-4910-a882-5db3087f9665', value: '14-7', label: 'CIA DE SEGUROS BOLIVAR SA.' },
   { id: '269efa44-8574-41f1-ad1a-cb1c68e65462', value: 'EPS047', label: 'SALUD BOLÍVAR EPS S.A.S.' },
   { id: 'de166579-7312-452f-92bb-0fe26db81d43', value: 'EMP023', label: 'COLSANITAS MEDICINA PREPAGADA' },
   { id: 'c97f925a-1718-4bea-9a6c-5e97cb4cf47c', value: 'EMP028', label: 'COOMEVA MEDICINA PREPAGADA' },
